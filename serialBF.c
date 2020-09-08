@@ -20,12 +20,27 @@ double getDistance(double loc1[2], double loc2[2]){
 	return sqrt(x_dist+y_dist);
 }
 	        
+double calcForce(Body a, Body b){
+    double distance = getDistance(a.location, b.location);
+    return (a.mass*b.mass*G)/(distance*distance);
+}
 
 int main(int argc,char *argv[]){
 	double loc1[2] = {3.0,4.0};
 	double loc2[2] = {10.0,0.0};
 	double dist = getDistance(loc1,loc2);
 	printf("%lf",dist);
+
+for (int i=0; i<bodies.length; i++) {
+    for (int j=0; j<bodies.length; j++) {
+      if (i!=j) {
+        universe[i] += calcForce(bodies[i], bodies[j]);
+      }
+    }
+  }
+  
+
+  return EXIT_SUCCESS;
 }
 
 
