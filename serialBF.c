@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 #include <math.h>
+//gravitational constant
+const double G = 6.67e-11;
 
 typedef struct Body {
 	double location[2]; 
@@ -24,12 +26,17 @@ double calcForce(Body a, Body b){
     double distance = getDistance(a.location, b.location);
     return (a.mass*b.mass*G)/(distance*distance);
 }
+//need to add forces
+
 
 int main(int argc,char *argv[]){
 	double loc1[2] = {3.0,4.0};
 	double loc2[2] = {10.0,0.0};
 	double dist = getDistance(loc1,loc2);
 	printf("%lf",dist);
+//Need to initialize the bodies
+//Add forces
+//update velocities and positions
 
 for (int i=0; i<bodies.length; i++) {
     for (int j=0; j<bodies.length; j++) {
