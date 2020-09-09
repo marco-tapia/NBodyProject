@@ -58,7 +58,7 @@ void updateBody(Body* b,double timeStep) {
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
   int n = 10;
-  int timeStep=1;
+  int timeStep=0;
   //initialize the bodies
   Body* bodies = (Body*)malloc(sizeof(Body)*n);
   for (int i = 0; i < n; i++) {
@@ -70,7 +70,8 @@ int main(int argc,char *argv[]){
     double yv = (rand() % 100) -50;
     initBody(&bodies[i], xc, yc, m, xv, yv);
   }
-
+while (timeStep < 50) {
+  printf("time %d \n", timeStep); 
   for (int i = 0; i < n; i++) {
     printf("Body %d :\n", i);
     printf("XCoord: %lf -- ", bodies[i].xcoord);
@@ -91,7 +92,9 @@ int main(int argc,char *argv[]){
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
   }
-
+  timeStep++;
+  printf("-------------------------------------------------------------------- \n");
+}
   return 0;
 }
 
