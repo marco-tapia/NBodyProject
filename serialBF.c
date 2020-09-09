@@ -59,10 +59,8 @@ int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
   int n = 10;
   int timeStep=1;
-  //Need to initialize the bodies
-  //Body* bodies[10];
+  //initialize the bodies
   Body* bodies = (Body*)malloc(sizeof(Body)*n);
-  //Body* nextStage[10];
   for (int i = 0; i < n; i++) {
     //set to srand so numbers change everytime
     double xc = (rand() % 400) -200; //Rand from -200 to 200
@@ -70,13 +68,8 @@ int main(int argc,char *argv[]){
     double m =  (rand() % 100);
     double xv = (rand() % 100) -50;
     double yv = (rand() % 100) -50;
-
-
     initBody(&bodies[i], xc, yc, m, xv, yv);
-/*    initBody(nextStage[i], xc, yc, m, xv, yv);
- */ }
-  //Add forces
-  //update velocities and positions
+  }
 
   for (int i = 0; i < n; i++) {
     printf("Body %d :\n", i);
@@ -85,19 +78,19 @@ int main(int argc,char *argv[]){
     printf("Mass: %lf -- ", bodies[i].mass);
     printf("XVel: %lf -- ", bodies[i].xVel);
     printf("YVel: %lf -- \n", bodies[i].yVel);
-
-
   }
-
-  // for (int i=0; i<bodies.length; i++) {
-  //     for (int j=0; j<bodies.length; j++) {
-  //       if (i!=j & j>i) {
-  //         nextStage[i] =
-  //         calcForce(bodies[i], bodies[j]);
-  //       }
-  //     }
-  //   }
-
+  
+  for (int i=0; i<n; i++) {
+    resetForce(&bodies[i]);
+    for (int j=0; j<n; j++) {
+      if (i!=j) {
+	calcForce(&bodies[i], &bodies[j]);
+      }
+    }
+  }
+  for (int i=0; i<n; i++) {
+    updateBody(&bodies[i], timeStep);
+  }
 
   return 0;
 }
