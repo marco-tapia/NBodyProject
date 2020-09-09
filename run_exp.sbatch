@@ -5,6 +5,6 @@
 # Job settings
 #SBATCH --nodes=1
 #SBATCH --time=0:20:00
-#SBATCH --output=lab1_runs.out
+#SBATCH --output=serialBF_runs.out
 
 ./nbody_serial
