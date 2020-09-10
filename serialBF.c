@@ -5,6 +5,7 @@ Implementation for a serial N-Body Simulation using a brute force algorithm
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 //gravitational constant
 const double G = 6.67e-11;
 
@@ -57,8 +58,13 @@ void updateBody(Body* b,double timeStep) {
 
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
-  int n = 10;
+  long n = 10000;
   int timeStep=0;
+
+  //timer variables
+  struct timespec start_time;
+  struct timespec end_time;
+  long msec;	
   //initialize the bodies
   Body* bodies = (Body*)malloc(sizeof(Body)*n);
   for (int i = 0; i < n; i++) {
@@ -72,15 +78,15 @@ int main(int argc,char *argv[]){
   }
 while (timeStep < 50) {
   printf("time %d \n", timeStep); 
-  for (int i = 0; i < n; i++) {
-    printf("Body %d :\n", i);
-    printf("XCoord: %lf -- ", bodies[i].xcoord);
-    printf("YCoord: %lf -- ", bodies[i].ycoord);
-    printf("Mass: %lf -- ", bodies[i].mass);
-    printf("XVel: %lf -- ", bodies[i].xVel);
-    printf("YVel: %lf -- \n", bodies[i].yVel);
-  }
-  
+ // for (int i = 0; i < n; i++) {
+   // printf("Body %d :\n", i);
+   // printf("XCoord: %lf -- ", bodies[i].xcoord);
+   // printf("YCoord: %lf -- ", bodies[i].ycoord);
+   // printf("Mass: %lf -- ", bodies[i].mass);
+   // printf("XVel: %lf -- ", bodies[i].xVel);
+   // printf("YVel: %lf -- \n", bodies[i].yVel);
+ // }
+  clock_gettime(CLOCK_MONOTONIC,&start_time);
   for (int i=0; i<n; i++) {
     resetForce(&bodies[i]);
     for (int j=0; j<n; j++) {
@@ -92,9 +98,15 @@ while (timeStep < 50) {
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
   }
+  clock_gettime(CLOCK_MONOTONIC,&end_time);
+
+ii:
   timeStep++;
+   msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
+  printf("Simulation with time_step %d completed in %dms",timeStep,msec);
   printf("-------------------------------------------------------------------- \n");
 }
+  free(bodies);
   return 0;
 }
 
