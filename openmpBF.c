@@ -79,6 +79,7 @@ int main(int argc,char *argv[]){
   Body* bodies = (Body*)malloc(sizeof(Body)*n);
   //set the srand
   srand(6);
+  #pragma omp parallel for 
   for (int i = 0; i < n; i++) {
     double xc = (rand() % 6000) -3000 + (double)rand()/(double)(RAND_MAX); //Rand from -3000 to 3000
     double yc = (rand() % 6000) -3000 + (double)rand()/(double)(RAND_MAX); //Second rand add decimal points
