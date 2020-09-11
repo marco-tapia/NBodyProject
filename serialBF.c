@@ -67,9 +67,9 @@ void updateBody(Body* b,double timeStep) {
 
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
-  long n = 10;
+  long n = 10000;
   int timeStep=1;
-  int time=0;
+  int time=50;
 
   //timer variables
   struct timespec start_time;
@@ -88,9 +88,9 @@ int main(int argc,char *argv[]){
     initBody(&bodies[i], xc, yc, m, xv, yv);
   }
 clock_gettime(CLOCK_MONOTONIC,&start_time);
-while (time < 5) {
-  printf("time %d \n", time); 
-  for (int i = 0; i < n; i++) {
+for (int i = 0; i < time; i++) {
+  printf("time %d \n", i); 
+  /*for (int i = 0; i < n; i++) {
     printf("Body %d :\n", i);
     printf("XCoord: %.17g -- ", bodies[i].xcoord);
     printf("YCoord: %.17g -- ", bodies[i].ycoord);
@@ -99,7 +99,7 @@ while (time < 5) {
     printf("YVel: %.17g \n-- ", bodies[i].yVel);
     //printf("XForce: %.17g -- ", bodies[i].xForce);
     //printf("YForce: %.17g -- \n", bodies[i].yForce); 
- }
+ }*/
   for (int i=0; i<n; i++) {
     for (int j=0; j<n; j++) {
       if (i!=j) {
@@ -109,13 +109,13 @@ while (time < 5) {
   }
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
-    printf("XForce Before Reset: %.17g -- ", bodies[i].xForce);
-    printf("YForce: %.17g -- \n", bodies[i].yForce);
+    //printf("XForce Before Reset: %.17g -- ", bodies[i].xForce);
+    //printf("YForce: %.17g -- \n", bodies[i].yForce);
     resetForce(&bodies[i]);
-    printf("XForce After Reset: %.17g -- ", bodies[i].xForce);
-    printf("YForce: %.17g -- \n", bodies[i].yForce);
+    //printf("XForce After Reset: %.17g -- ", bodies[i].xForce);
+    //printf("YForce: %.17g -- \n", bodies[i].yForce);
   }
-  time++;
+  //time++;
 //  printf("-------------------------------------------------------------------- \n");
 }
   clock_gettime(CLOCK_MONOTONIC,&end_time);
