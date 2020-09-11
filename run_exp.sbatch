@@ -14,5 +14,5 @@ echo "------------------------"
 echo "------------------------"
 
 echo "Parallel runs"
-./nbody_openmp
+#./nbody_openmp
 echo "------------------------"
