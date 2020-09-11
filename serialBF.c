@@ -58,7 +58,7 @@ void updateBody(Body* b,double timeStep) {
 
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
-  long n = 10000;
+  long n = 10;
   int timeStep=0;
 
   //timer variables
