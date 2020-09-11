@@ -59,8 +59,9 @@ void updateBody(Body* b,double timeStep) {
 
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
-  long n = 10;
-  int timeStep=0;
+  long n = 10000;
+  int timeStep=1;
+  int time = 0;
 
   //timer variables
   struct timespec start_time;
@@ -77,8 +78,10 @@ int main(int argc,char *argv[]){
     double yv = (rand() % 100) -50;
     initBody(&bodies[i], xc, yc, m, xv, yv);
   }
-while (timeStep < 50) {
-  printf("time %d \n", timeStep); 
+ clock_gettime(CLOCK_MONOTONIC,&start_time);
+
+for (int i=0; i < 50; i++) {
+ // printf("time %d \n", time); 
  // for (int i = 0; i < n; i++) {
    // printf("Body %d :\n", i);
    // printf("XCoord: %lf -- ", bodies[i].xcoord);
@@ -87,7 +90,6 @@ while (timeStep < 50) {
    // printf("XVel: %lf -- ", bodies[i].xVel);
    // printf("YVel: %lf -- \n", bodies[i].yVel);
  // }
-  clock_gettime(CLOCK_MONOTONIC,&start_time);
   for (int i=0; i<n; i++) {
     resetForce(&bodies[i]);
     #pragma omp parallel for
@@ -97,18 +99,16 @@ while (timeStep < 50) {
       }
     }
   }
-  #pragma omp parallel for
+ #pragma omp parallel for
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
   }
-  clock_gettime(CLOCK_MONOTONIC,&end_time);
-
-ii:
-  timeStep++;
-   msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
-  printf("Parallel simulation with time_step %d completed in %dms",timeStep,msec);
-  printf("-------------------------------------------------------------------- \n");
+//  time++;
+//  printf("-------------------------------------------------------------------- \n");
 }
+clock_gettime(CLOCK_MONOTONIC,&end_time);
+msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
+printf("Parallel simulation with time_step %d completed in %dms",timeStep,msec);
   free(bodies);
   return 0;
 }
