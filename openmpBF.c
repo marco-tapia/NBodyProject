@@ -7,6 +7,8 @@ Implementation for a serial N-Body Simulation using a brute force algorithm
 #include <time.h>
 #include <float.h>
 #include <omp.h>
+#include <pthread.h>
+
 //gravitational constant
 const double G = 6.67e-11;
 
@@ -63,13 +65,25 @@ void updateBody(Body* b,double timeStep) {
  b->ycoord += timeStep * b->yVel;
 }
 //need to add forces
+void writeFile(Body* bodies, FILE *file){
 
+
+    fwrite(bodies, sizeof(bodies),1, file);    
+ //   fprintf(file,"File writing\n");
+   // printf("File write function is happening"); 
+    //fopen to make file
+
+    
+}
 
 int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
+ // pthread_t thread[1];
+  FILE *file;
+  file = fopen("output.bin","ab");
   long n = 10000;
   int timeStep=1;
-  int time=50;
+  int time=2;
 
   //timer variables
   struct timespec start_time;
@@ -113,6 +127,10 @@ for (int i = 0; i<time; i++) {
   #pragma omp parallel for
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
+    
+    
+
+    
     //printf("XForce Before Reset: %.17g -- ", bodies[i].xForce);
     //printf("YForce: %.17g -- \n", bodies[i].yForce);
     resetForce(&bodies[i]);
@@ -121,11 +139,27 @@ for (int i = 0; i<time; i++) {
   }
   //time++;
 //  printf("-------------------------------------------------------------------- \n");
+
+//write file
+
+  writeFile(bodies,file);
+    
 }
   clock_gettime(CLOCK_MONOTONIC,&end_time);
    msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
   printf("Parallel Simulation with time_step %d completed in %dms",timeStep,msec);
   free(bodies);
+//  FILE *read;
+  //int c;
+ // read = fopen("output.txt","r");
+ // while(1){
+   // c = fgetc(read);
+   // if(feof(read)){
+     // break;
+  //  }
+  //  printf("%c",c);
+ // }
+ // fclose(read);
   return 0;
 }
 
