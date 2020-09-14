@@ -80,10 +80,10 @@ int main(int argc,char *argv[]){
   //long n = strtol(argv[1],NULL,10);
  // pthread_t thread[1];
   FILE *file;
-  file = fopen("output.bin","ab");
-  long n = 10000;
+  file = fopen("output.bin","wb");
+  long n = 1;
   int timeStep=1;
-  int time=2;
+  int time=1;
 
   //timer variables
   struct timespec start_time;
@@ -149,7 +149,8 @@ for (int i = 0; i<time; i++) {
   clock_gettime(CLOCK_MONOTONIC,&end_time);
    msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
   printf("Parallel Simulation with time_step %d completed in %dms",timeStep,msec);
-  free(bodies);
+ fclose(file);
+ free(bodies);
   return 0;
 }
 
