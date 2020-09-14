@@ -81,9 +81,9 @@ int main(int argc,char *argv[]){
  // pthread_t thread[1];
   FILE *file;
   file = fopen("output.bin","wb");
-  long n = 1;
-  int timeStep=1;
-  int time=1;
+  long n = 100;
+  int timeStep=60;
+  int time=3;
 
   //timer variables
   struct timespec start_time;
@@ -102,6 +102,8 @@ int main(int argc,char *argv[]){
     double yv = (rand() % 100) -50 + (double)rand()/(double)(RAND_MAX);
     initBody(&bodies[i], xc, yc, m, xv, yv);
   }
+
+  writeFile(bodies,file,n);
 clock_gettime(CLOCK_MONOTONIC,&start_time);
 for (int i = 0; i<time; i++) {
   printf("time %d \n", i); 
