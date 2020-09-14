@@ -104,17 +104,18 @@ int main(int argc,char *argv[]){
   }
 clock_gettime(CLOCK_MONOTONIC,&start_time);
 for (int i = 0; i<time; i++) {
-  //printf("time %d \n", i); 
-  //for (int i = 0; i < n; i++) {
-  /*  printf("Body %d :\n", i);
+  printf("time %d \n", i); 
+  for (int i = 0; i < n; i++) {
+    printf("Body %d :\n", i);
     printf("XCoord: %.17g -- ", bodies[i].xcoord);
     printf("YCoord: %.17g -- ", bodies[i].ycoord);
-    printf("Mass: %.17g -- ", bodies[i].mass);
-    printf("XVel: %.17g -- ", bodies[i].xVel);
-    printf("YVel: %.17g \n-- ", bodies[i].yVel);
-    *///printf("XForce: %.17g -- ", bodies[i].xForce);
+  //  printf("Mass: %.17g -- ", bodies[i].mass);
+   // printf("XVel: %.17g -- ", bodies[i].xVel);
+ //   printf("YVel: %.17g \n-- ", bodies[i].yVel);
+    //printf("XForce: %.17g -- ", bodies[i].xForce);
     //printf("YForce: %.17g -- \n", bodies[i].yForce); 
- //}
+ }
+
 
   #pragma omp parallel for collapse(2)
   for (int i=0; i<n; i++) {
@@ -149,17 +150,6 @@ for (int i = 0; i<time; i++) {
    msec = (end_time.tv_sec - start_time.tv_sec)*1000 + (end_time.tv_nsec - start_time.tv_nsec)/1000000;
   printf("Parallel Simulation with time_step %d completed in %dms",timeStep,msec);
   free(bodies);
-//  FILE *read;
-  //int c;
- // read = fopen("output.txt","r");
- // while(1){
-   // c = fgetc(read);
-   // if(feof(read)){
-     // break;
-  //  }
-  //  printf("%c",c);
- // }
- // fclose(read);
   return 0;
 }
 
