@@ -65,10 +65,10 @@ void updateBody(Body* b,double timeStep) {
  b->ycoord += timeStep * b->yVel;
 }
 //need to add forces
-void writeFile(Body* bodies, FILE *file){
+void writeFile(Body* bodies, FILE *file, int arr_length){
 
 
-    fwrite(bodies, sizeof(bodies),1, file);    
+    fwrite(bodies, sizeof(Body)*arr_length,1, file);    
  //   fprintf(file,"File writing\n");
    // printf("File write function is happening"); 
     //fopen to make file
@@ -142,7 +142,7 @@ for (int i = 0; i<time; i++) {
 
 //write file
 
-  writeFile(bodies,file);
+  writeFile(bodies,file,n);
     
 }
   clock_gettime(CLOCK_MONOTONIC,&end_time);
