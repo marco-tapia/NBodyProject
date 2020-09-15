@@ -9,7 +9,7 @@
 echo "Serial runs"
 
 echo "------------------------"
-./nbody_serial
+#./nbody_serial
 
 echo "------------------------"
 

@@ -12,6 +12,9 @@ Implementation for a serial N-Body Simulation using a brute force algorithm
 //gravitational constant
 const double G = 6.67e-11;
 
+/*
+A representation of a celestial body
+*/
 typedef struct Body {
         double xcoord;
         double ycoord;
@@ -21,7 +24,9 @@ typedef struct Body {
         double xForce;
         double yForce;
 }Body;
-
+/*
+Initializes values
+*/
 void initBody(Body* b, double xc, double yc, double m, double xv, double yv) {
   b->xcoord = xc;
   b->ycoord = yc;
@@ -29,14 +34,16 @@ void initBody(Body* b, double xc, double yc, double m, double xv, double yv) {
   b->xVel = xv;
   b->yVel = yv;
 }
-///
+/*
+Calculates the gravitational force between two bodies
+*/
 void calcForce(Body* a, Body* b) {
-    double SOFTENING = 3e4;
+    double SOFTENING = 30;
 
 
-    double x_dist = a->xcoord-b->xcoord;
+    double x_dist = b->xcoord-a->xcoord;
     //printf("x_dist: %lf -- ", x_dist);
-    double y_dist = a->ycoord-b->ycoord;
+    double y_dist = b->ycoord-a->ycoord;
     //printf("y_dist: %lf -- ", y_dist);
     double distance = sqrt(x_dist*x_dist + y_dist*y_dist);
     //printf("distance: %lf -- ", distance);
@@ -44,7 +51,7 @@ void calcForce(Body* a, Body* b) {
     //double grav = 0.0000000000667;
     //printf("G: %lf -- ", grav);
     //printf("G-:%.17g ", grav);
-    double F = (a->mass*b->mass*G)/(distance*distance);// + SOFTENING*SOFTENING);
+    double F = (a->mass*b->mass*G)/((distance*distance) + SOFTENING*SOFTENING);
     //printf("F: %.17g -- ", F);
     a->xForce += F*x_dist/distance;
     a->yForce += F*y_dist/distance;
@@ -52,7 +59,9 @@ void calcForce(Body* a, Body* b) {
     //printf("a->YForce: %.17g -- ", a->yForce);
 
 }
-
+/*
+Reset's a body's forces between iterations
+*/
 void resetForce(Body* b) {
   b->xForce = 0.0;
   b->yForce = 0.0;
@@ -64,26 +73,23 @@ void updateBody(Body* b,double timeStep) {
  b->xcoord += timeStep * b->xVel;
  b->ycoord += timeStep * b->yVel;
 }
-//need to add forces
+/*
+Writes the array of bodies to a file
+*/
 void writeFile(Body* bodies, FILE *file, int arr_length){
 
 
     fwrite(bodies, sizeof(Body)*arr_length,1, file);    
- //   fprintf(file,"File writing\n");
-   // printf("File write function is happening"); 
-    //fopen to make file
 
     
 }
 
 int main(int argc,char *argv[]){
-  //long n = strtol(argv[1],NULL,10);
- // pthread_t thread[1];
   FILE *file;
   file = fopen("output.bin","wb");
   long n = 100;
-  int timeStep=60;
-  int time=3;
+  int timeStep=6000000;
+  int time=600;
 
   //timer variables
   struct timespec start_time;
@@ -97,12 +103,21 @@ int main(int argc,char *argv[]){
   for (int i = 0; i < n; i++) {
     double xc = (rand() % 6000) -3000 + (double)rand()/(double)(RAND_MAX); //Rand from -3000 to 3000
     double yc = (rand() % 6000) -3000 + (double)rand()/(double)(RAND_MAX); //Second rand add decimal points
-    double m =  (rand() % 200) + 5;
-    double xv = (rand() % 100) -50 + (double)rand()/(double)(RAND_MAX);
-    double yv = (rand() % 100) -50 + (double)rand()/(double)(RAND_MAX);
+    double m =  (rand() % 200) + 50;
+    
+     // double xv = (rand() % 1) -.02 + (double)rand()/(double)(RAND_MAX);
+     // double yv = (rand() % 1) -.02 + (double)rand()/(double)(RAND_MAX);
+      double xv = 0;
+      double yv =0;
+    //Create initial central mass
+    if(i == 0){
+      m = 1000;
+      xc = 0;
+      yc =0;
+}
     initBody(&bodies[i], xc, yc, m, xv, yv);
   }
-
+  //Initial file write for time = 0
   writeFile(bodies,file,n);
 clock_gettime(CLOCK_MONOTONIC,&start_time);
 for (int i = 0; i<time; i++) {
@@ -118,7 +133,7 @@ for (int i = 0; i<time; i++) {
     //printf("YForce: %.17g -- \n", bodies[i].yForce); 
  }
 
-
+ //brute force nested loop through array of bodies
   #pragma omp parallel for collapse(2)
   for (int i=0; i<n; i++) {
     for (int j=0; j<n; j++) {
@@ -127,6 +142,7 @@ for (int i = 0; i<time; i++) {
       }
     }
   }
+  //loop to update velocities, locations of the bodies
   #pragma omp parallel for
   for (int i=0; i<n; i++) {
     updateBody(&bodies[i], timeStep);
